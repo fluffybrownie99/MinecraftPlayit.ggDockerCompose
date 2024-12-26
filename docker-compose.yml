@@ -1,0 +1,34 @@
+services:
+  minecraft:
+    build: 
+      context: ./minecraft
+      args: 
+        MINECRAFT_VERSION: 1.21.1
+    volumes:
+      # This is for persistent storage to make sure you can turn your world off and on
+      # without losing any of your data
+      - ./minecraft-data:/minecraft-server/data
+    ports:
+      - 25566:25565
+    environment:
+      # Change this to true
+      - eula=false
+      # Adjust your initial memory and maximum memory as needed
+      - INIT_MEMORY:'4G'
+      - MAX_MEMORY:'8G'
+    stdin_open: true 
+    tty: true
+    depends_on:
+      - playit
+
+  playit:
+    image: ghcr.io/playit-cloud/playit-agent:0.15
+    network_mode: host
+    environment:
+    # Uncomment the line below and change the secret key to the one provided by playit.gg
+    #- SECRET_KEY=<RETRIEVE FROM playit.gg>
+    #command: 'tcp minecraft:25565'
+      #ports:
+        # - 4040:4040
+
+
